@@ -1,5 +1,5 @@
-const { offlineFallback, warmStrategyCache } = require('workbox-recipes');
-const { CacheFirst } = require('workbox-strategies');
+const { offlineFallback, warmStrategyCache, imageCache } = require('workbox-recipes');
+const { CacheFirst, StaleWhileRevalidate } = require('workbox-strategies');
 const { registerRoute } = require('workbox-routing');
 const { CacheableResponsePlugin } = require('workbox-cacheable-response');
 const { ExpirationPlugin } = require('workbox-expiration');
@@ -24,8 +24,50 @@ warmStrategyCache({
   strategy: pageCache,
 });
 
+
 registerRoute(({ request }) => request.mode === 'navigate', pageCache);
 
-// TODO: Implement asset caching
+// DONE WITH (https://developer.chrome.com/docs/workbox/modules/workbox-recipes/): Implement asset caching
 
-registerRoute();
+const cacheResources = 'static-resources';
+const matchCallbackResources = ({request}) =>
+  // CSS
+  request.destination === 'style' ||
+  // JavaScript
+  request.destination === 'script' ||
+  // Web Workers
+  request.destination === 'worker';
+
+registerRoute(  matchCallbackResources,
+  new StaleWhileRevalidate({
+    cacheResources,
+    plugins: [
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
+      }),
+    ],
+  }));
+
+  const cacheImages = 'images';
+  const matchCallbackImages = ({request}) => request.destination === 'image';
+  const maxAgeSeconds = 30 * 24 * 60 * 60;
+  const maxEntries = 60;
+  
+  registerRoute(
+    matchCallbackImages,
+    new CacheFirst({
+      cacheImages,
+      plugins: [
+        new CacheableResponsePlugin({
+          statuses: [0, 200],
+        }),
+        new ExpirationPlugin({
+          maxEntries,
+          maxAgeSeconds,
+        }),
+      ],
+    })
+  );
+  
+  offlineFallback();
+
