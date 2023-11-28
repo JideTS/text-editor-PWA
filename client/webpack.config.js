@@ -24,7 +24,7 @@ module.exports = () => {
         template: './index.html',
         title: 'Text_Editor_PWA'
       }),
-      new MiniCssExtractPlugin(),
+   //   new MiniCssExtractPlugin(),
       
       new InjectManifest({
         swSrc: '/src-sw.js',
