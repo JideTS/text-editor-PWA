@@ -2,5 +2,5 @@
 
 module.exports = (app) =>
   app.get('/', (req, res) =>
-  res.sendFile('index.html', { root: __dirname})
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'))
   );
