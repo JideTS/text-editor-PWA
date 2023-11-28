@@ -32,6 +32,8 @@ module.exports = () => {
       }),
       new GenerateSW(),
       new WebpackPwaManifest({
+        fingerprints: false,
+        inject: true,
         name: 'Text_Editor',
         short_name: 'Text_Editor',
         description: 'Edit some text to build great thoughts',
