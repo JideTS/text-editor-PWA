@@ -26,3 +26,5 @@ Utilize this application for note-taking, capturing ideas, or drafting content.
 [Test it now](https://text-editor-pwa.onrender.com)
 
 ## Preview of the application
+
+<img width="1728" alt="A preview of a text editor application" src="https://github.com/JideTS/text-editor-PWA/assets/20988563/94dc1941-06a1-4053-801c-87dac6e7137f">
